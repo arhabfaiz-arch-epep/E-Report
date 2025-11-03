@@ -1,0 +1,74 @@
+/* Custom animations */
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.slide-down {
+    animation: slideDown 1s ease-out;
+}
+
+.slide-up {
+    animation: slideUp 1s ease-out 0.5s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Dark mode overrides */
+.dark-mode .card {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.dark-mode .form-control {
+    background-color: #555;
+    color: #ffffff;
+    border-color: #777;
+}
+
+.dark-mode .form-control:focus {
+    background-color: #555;
+    color: #ffffff;
+    border-color: #0078d7;
+    box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+}
+
+.dark-mode .table {
+    background-color: #333;
+    color: #ffffff;
+}
+
+.dark-mode .table th {
+    background-color: #0078d7;
+    color: #ffffff;
+}
+
+.dark-mode .table td {
+    border-color: #555;
+}
+
+.dark-mode .table tbody tr:hover {
+    background-color: #444;
+}
+
+.dark-mode .btn-outline-secondary {
+    color: #ffffff;
+    border-color: #6c757d;
+}
+
+.dark-mode .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #ffffff;
+}
