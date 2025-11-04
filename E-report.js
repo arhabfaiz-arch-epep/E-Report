@@ -21,7 +21,7 @@ const registerBtn = document.getElementById('registerBtn');
 
 let selectedPhoto = null;
 let currentStream = null;
-let currentFacing = 'environment'; // try back camera first on mobile
+let currentFacing = 'environment'; 
 
 const photoPreview = document.getElementById('photoPreview');
 const clearPhotoBtn = document.getElementById('clearPhoto');
@@ -55,7 +55,7 @@ function simpanReport(e) {
     e.preventDefault();
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) {
-        // require login
+        
         loginModal.show();
         return;
     }
@@ -93,7 +93,7 @@ if (isDarkMode) {
 form.addEventListener('submit', simpanReport);
 toggleMode.addEventListener('click', toggleDarkMode);
 
-// Auth helpers
+
 function updateAuthUI() {
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
@@ -101,15 +101,15 @@ function updateAuthUI() {
         currentUserSpan.style.display = 'inline-block';
         logoutBtn.style.display = 'inline-block';
         loginBtn.style.display = 'none';
-        // enable form
+      
         document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = false);
     } else {
         currentUserSpan.style.display = 'none';
         logoutBtn.style.display = 'none';
         loginBtn.style.display = 'inline-block';
-        // disable form until login
+        
         document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = true);
-        // but keep open camera button disabled as well
+        
     }
 }
 
@@ -154,16 +154,16 @@ registerBtn.addEventListener('click', () => {
     }
     users.push({ username: u, password: p });
     localStorage.setItem('users', JSON.stringify(users));
-    // auto-login after register
+   
     localStorage.setItem('currentUser', u);
     loginModal.hide();
     updateAuthUI();
 });
 
-// Initialize auth UI state
+
 updateAuthUI();
 
-// Camera logic
+
 async function startStream(facingMode = 'environment') {
     stopStream();
     cameraError.style.display = 'none';
@@ -209,10 +209,10 @@ captureBtn.addEventListener('click', () => {
 });
 
 openCameraBtn.addEventListener('click', async () => {
-    // Open modal and start camera
+    
     cameraError.style.display = 'none';
     cameraModal.show();
-    // give modal a tick to render
+    
     setTimeout(() => startStream(currentFacing), 200);
 });
 
@@ -228,12 +228,12 @@ clearPhotoBtn.addEventListener('click', () => {
     clearPhotoBtn.style.display = 'none';
 });
 
-// Stop camera when modal closes
+
 cameraModalEl.addEventListener('hidden.bs.modal', () => {
     stopStream();
 });
 
-// escape HTML to avoid injection in table
+
 function escapeHtml(unsafe) {
     if (!unsafe && unsafe !== 0) return '';
     return String(unsafe)
@@ -244,7 +244,7 @@ function escapeHtml(unsafe) {
         .replace(/'/g, '&#039;');
 }
 
-// Initialize photo preview if editing existing unsaved photo (none currently)
+
 if (selectedPhoto) {
     photoPreview.src = selectedPhoto;
     photoPreview.style.display = 'inline-block';
@@ -253,7 +253,7 @@ if (selectedPhoto) {
 
 renderReports();
 
-// Download photo function: saves data URL as a PNG file
+
 function downloadPhoto(index) {
     const r = reports[index];
     if (!r || !r.photo) {
@@ -261,10 +261,10 @@ function downloadPhoto(index) {
         return;
     }
     const dataUrl = r.photo;
-    // create temporary anchor
+   
     const a = document.createElement('a');
     a.href = dataUrl;
-    // create filename using title or index
+    
     const safeTitle = (r.judul || `laporan-${index+1}`).replace(/[^a-z0-9\-\_ ]/gi, '').replace(/\s+/g, '_');
     a.download = `${safeTitle || 'foto'}_${index+1}.png`;
     document.body.appendChild(a);
