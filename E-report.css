@@ -72,3 +72,27 @@
     background-color: #6c757d;
     color: #ffffff;
 }
+
+/* Camera / preview styles */
+#videoPreview {
+    border-radius: 6px;
+    background: #000;
+}
+
+#photoPreview {
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.img-thumbnail {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Modal tuning */
+.modal-body { padding: 1rem; }
+.modal-footer { display:flex; align-items:center; }
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    #videoPreview { height: 220px; }
+}

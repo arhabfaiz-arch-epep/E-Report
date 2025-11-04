@@ -27,6 +27,19 @@
                             <label for="Isi" class="form-label">Isi Laporan</label>
                             <textarea class="form-control" id="Isi" rows="3" placeholder="Masukkan isi laporan"></textarea>
                         </div>
+
+                        <!-- Photo preview and camera controls -->
+                        <div class="mb-3">
+                            <label class="form-label">Foto (opsional)</label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <img id="photoPreview" src="" alt="Preview" class="img-thumbnail" style="display:none; max-width:120px; max-height:90px;" />
+                                <div>
+                                    <button type="button" id="openCamera" class="btn btn-secondary btn-sm">Buka Kamera</button>
+                                    <button type="button" id="clearPhoto" class="btn btn-outline-danger btn-sm" style="display:none;">Hapus Foto</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
                 </div>
@@ -40,6 +53,7 @@
                             <th>No</th>
                             <th>Judul</th>
                             <th>Isi</th>
+                            <th>Foto</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -48,6 +62,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Camera Modal -->
+    <div class="modal fade" id="cameraModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Ambil Foto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <video id="videoPreview" autoplay playsinline style="width:100%; max-height:400px; background:#000; border-radius:6px;"></video>
+            <canvas id="captureCanvas" style="display:none;"></canvas>
+            <div id="cameraError" class="text-danger mt-2" style="display:none;"></div>
+          </div>
+          <div class="modal-footer">
+            <div class="me-auto">
+              <button type="button" id="switchCamera" class="btn btn-outline-secondary btn-sm">Ganti Kamera</button>
+            </div>
+            <button type="button" id="captureBtn" class="btn btn-primary">Ambil</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="E-report.js"></script>
 </body>
