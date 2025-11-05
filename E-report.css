@@ -1,4 +1,4 @@
-/* Custom animations */
+
 .fade-in {
     animation: fadeIn 1s ease-in;
 }
@@ -26,7 +26,7 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Dark mode overrides */
+
 .dark-mode .navbar {
     background-color: #222 !important;
     border-bottom-color: #444 !important;
@@ -86,7 +86,7 @@
     color: #ffffff;
 }
 
-/* Camera / preview styles */
+
 #videoPreview {
     border-radius: 6px;
     background: #000;
@@ -105,7 +105,7 @@
 .modal-body { padding: 1rem; }
 .modal-footer { display:flex; align-items:center; }
 
-/* Responsive tweaks */
+
 @media (max-width: 576px) {
     #videoPreview { height: 220px; }
 }
