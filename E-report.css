@@ -27,6 +27,19 @@
 }
 
 /* Dark mode overrides */
+.dark-mode .navbar {
+    background-color: #222 !important;
+    border-bottom-color: #444 !important;
+}
+
+.dark-mode .navbar-brand {
+    color: #fff;
+}
+
+.dark-mode #currentUser {
+    color: #aaa !important;
+}
+
 .dark-mode .card {
     background-color: #333;
     color: #ffffff;
