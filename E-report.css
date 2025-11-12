@@ -164,6 +164,7 @@ body.dark-mode .form-control {
 
 @media (max-width: 576px) {
     #videoPreview { height: 220px; }
+    #currentUser { display: none !important; }
 }
 
 
