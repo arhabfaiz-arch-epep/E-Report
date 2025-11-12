@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Form and table elements
+ 
     const form = document.getElementById('reportForm');
     const tableBody = document.querySelector('#reportTable tbody');
 
-    // Data storage
+    
     let reports = JSON.parse(localStorage.getItem('reports')) || [];
     let users = JSON.parse(localStorage.getItem('users')) || [{ username: 'admin', password: 'admin' }];
     let isDarkMode = JSON.parse(localStorage.getItem('darkMode')) || false;
 
-    // Authentication elements
+
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const currentUserSpan = document.getElementById('currentUser');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerBtn = document.getElementById('registerBtn');
     const toggleMode = document.getElementById('toggleMode');
 
-    // Camera and photo elements
+    
     let selectedPhoto = null;
     let currentStream = null;
     let currentFacing = 'environment';
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Save report function
+   
     function simpanReport(e) {
         e.preventDefault();
         const currentUser = localStorage.getItem('currentUser');
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderReports();
     }
 
-    // Delete report function
+    
     function hapusReport(index) {
         reports.splice(index, 1);
         localStorage.setItem('reports', JSON.stringify(reports));
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.hapusReport = hapusReport;
 
-    // Toggle dark mode function
+    
     function toggleDarkMode() {
         isDarkMode = !isDarkMode;
         document.body.classList.toggle('dark-mode', isDarkMode);
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize dark mode
+    
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
         if (toggleMode) toggleMode.innerHTML = '<i class="bi bi-sun"></i> Mode Terang';
@@ -102,11 +102,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (toggleMode) toggleMode.innerHTML = '<i class="bi bi-moon"></i> Mode Gelap';
     }
 
-    // Event listeners
+   
     form.addEventListener('submit', simpanReport);
     toggleMode.addEventListener('click', toggleDarkMode);
 
-    // Update authentication UI
+   
     function updateAuthUI() {
         const currentUser = localStorage.getItem('currentUser');
         if (currentUser) {
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Authentication event listeners
+
     loginBtn.addEventListener('click', () => {
         loginError.style.display = 'none';
         loginForm.reset();
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateAuthUI();
 
-    // Camera functions
+    
     async function startStream(facingMode = 'environment') {
         stopStream();
         cameraError.style.display = 'none';
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopStream();
     });
 
-    // Utility functions
+
     function escapeHtml(unsafe) {
     if (!unsafe && unsafe !== 0) return '';
     return String(unsafe)
