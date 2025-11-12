@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Laporan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="E-report.css">
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top mb-4">
+    <nav class="navbar navbar-expand-lg bg-blue-300 border-bottom sticky-top mb-4">
         <div class="container-fluid px-4">
-            <span class="navbar-brand mb-0 h1">E-LAPORAN</span>
+            <div class="d-flex align-items-center gap-3">
+                <span class="navbar-brand mb-0 h1">E-LAPORAN</span>
+            </div>
             <div class="d-flex align-items-center gap-3">
                 <span id="currentUser" class="text-secondary" style="display:none;"></span>
-                <button id="logoutBtn" class="btn btn-outline-danger btn-sm" style="display:none;">Keluar</button>
-                <button id="loginBtn" class="btn btn-outline-primary btn-sm">Masuk / Daftar</button>
-                <button id="toggleMode" class="btn btn-outline-secondary btn-sm">Mode Gelap</button>
+                <button id="logoutBtn" class="btn btn-outline-danger btn-sm" style="display:none;"><i class="bi bi-box-arrow-right"></i> Keluar</button>
+                <button id="loginBtn" class="btn btn-outline-primary btn-sm"><i class="bi bi-person"></i> Masuk / Daftar</button>
+                <button id="toggleMode" class="btn btn-outline-secondary btn-sm"><i class="bi bi-moon"></i> Mode Gelap</button>
             </div>
         </div>
     </nav>
@@ -44,13 +47,13 @@
                             <div class="d-flex gap-2 align-items-center">
                                 <img id="photoPreview" src="" alt="Preview" class="img-thumbnail" style="display:none; max-width:120px; max-height:90px;" />
                                 <div>
-                                    <button type="button" id="openCamera" class="btn btn-secondary btn-sm">Buka Kamera</button>
-                                    <button type="button" id="clearPhoto" class="btn btn-outline-danger btn-sm" style="display:none;">Hapus Foto</button>
+                                    <button type="button" id="openCamera" class="btn btn-secondary btn-sm"><i class="bi bi-camera"></i> Buka Kamera</button>
+                                    <button type="button" id="clearPhoto" class="btn btn-outline-danger btn-sm" style="display:none;"><i class="bi bi-x-circle"></i> Hapus Foto</button>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
                     </form>
                 </div>
             </div>
@@ -82,7 +85,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
-            <video id="videoPreview" autoplay playsinline style="width:100%; max-height:400px; background:#000; border-radius:6px;"></video>
+            <video id="videoPreview" autoplay playsinline style="width:100%; max-height:400px; background:#96d3ea; border-radius:6px;"></video>
             <canvas id="captureCanvas" style="display:none;"></canvas>
             <div id="cameraError" class="text-danger mt-2" style="display:none;"></div>
           </div>

@@ -1,240 +1,252 @@
-const form = document.getElementById('reportForm')
-const tableBody = document.querySelector('#reportTable tbody')
-const toggleMode = document.getElementById('toggleMode')
+document.addEventListener('DOMContentLoaded', function() {
+    // Form and table elements
+    const form = document.getElementById('reportForm');
+    const tableBody = document.querySelector('#reportTable tbody');
 
-let reports = JSON.parse(localStorage.getItem('reports')) || [];
-let isDarkMode = localStorage.getItem('darkMode') === 'true';
+    // Data storage
+    let reports = JSON.parse(localStorage.getItem('reports')) || [];
+    let users = JSON.parse(localStorage.getItem('users')) || [{ username: 'admin', password: 'admin' }];
+    let isDarkMode = JSON.parse(localStorage.getItem('darkMode')) || false;
 
-// Auth (client-side, localStorage)
-let users = JSON.parse(localStorage.getItem('users')) || [{ username: 'admin', password: 'admin' }];
+    // Authentication elements
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const currentUserSpan = document.getElementById('currentUser');
+    const loginModalEl = document.getElementById('loginModal');
+    const loginModal = new bootstrap.Modal(loginModalEl, { backdrop: 'static' });
+    const loginForm = document.getElementById('loginForm');
+    const loginUsername = document.getElementById('loginUsername');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginError = document.getElementById('loginError');
+    const registerBtn = document.getElementById('registerBtn');
+    const toggleMode = document.getElementById('toggleMode');
 
-const loginBtn = document.getElementById('loginBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const currentUserSpan = document.getElementById('currentUser');
-const loginModalEl = document.getElementById('loginModal');
-const loginModal = new bootstrap.Modal(loginModalEl, { backdrop: 'static' });
-const loginForm = document.getElementById('loginForm');
-const loginUsername = document.getElementById('loginUsername');
-const loginPassword = document.getElementById('loginPassword');
-const loginError = document.getElementById('loginError');
-const registerBtn = document.getElementById('registerBtn');
+    // Camera and photo elements
+    let selectedPhoto = null;
+    let currentStream = null;
+    let currentFacing = 'environment';
 
-let selectedPhoto = null;
-let currentStream = null;
-let currentFacing = 'environment'; 
+    const photoPreview = document.getElementById('photoPreview');
+    const clearPhotoBtn = document.getElementById('clearPhoto');
+    const openCameraBtn = document.getElementById('openCamera');
+    const video = document.getElementById('videoPreview');
+    const canvas = document.getElementById('captureCanvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const switchCameraBtn = document.getElementById('switchCamera');
+    const cameraError = document.getElementById('cameraError');
+    const cameraModalEl = document.getElementById('cameraModal');
+    const cameraModal = new bootstrap.Modal(cameraModalEl, { backdrop: 'static' });
 
-const photoPreview = document.getElementById('photoPreview');
-const clearPhotoBtn = document.getElementById('clearPhoto');
-const openCameraBtn = document.getElementById('openCamera');
-const video = document.getElementById('videoPreview');
-const canvas = document.getElementById('captureCanvas');
-const captureBtn = document.getElementById('captureBtn');
-const switchCameraBtn = document.getElementById('switchCamera');
-const cameraError = document.getElementById('cameraError');
-const cameraModalEl = document.getElementById('cameraModal');
-const cameraModal = new bootstrap.Modal(cameraModalEl, { backdrop: 'static' });
-
-function renderReports() {
-    tableBody.innerHTML = '';
-    reports.forEach((r, i) => {
-        const photoCell = r.photo ? `<td><img src="${r.photo}" alt="Foto" class="img-thumbnail" style="max-width:80px; max-height:60px;"></td>` : '<td></td>';
-                const downloadBtn = r.photo ? `<button class="btn btn-success btn-sm me-1" onclick="downloadPhoto(${i})">Unduh Foto</button>` : '';
-                const row = `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${escapeHtml(r.judul)}</td>
-                <td>${escapeHtml(r.isi)}</td>
-                ${photoCell}
-                <td>${downloadBtn}<button class="btn btn-danger btn-sm" onclick="hapusReport(${i})">Hapus</button></td>
-            </tr>`;
-        tableBody.innerHTML += row;
-    });
-}
-
-function simpanReport(e) {
-    e.preventDefault();
-    const currentUser = localStorage.getItem('currentUser');
-    if (!currentUser) {
-        
-        loginModal.show();
-        return;
+    // Render reports table
+    function renderReports() {
+        tableBody.innerHTML = '';
+        reports.forEach((r, i) => {
+            const photoCell = r.photo ? `<td><img src="${r.photo}" alt="Foto" class="img-thumbnail" style="max-width:80px; max-height:60px;"></td>` : '<td></td>';
+            const downloadBtn = r.photo ? `<button class="btn btn-success btn-sm me-1" onclick="downloadPhoto(${i})">Unduh Foto</button>` : '';
+            const row = `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${escapeHtml(r.judul)}</td>
+                    <td>${escapeHtml(r.isi)}</td>
+                    ${photoCell}
+                    <td>${downloadBtn}<button class="btn btn-danger btn-sm" onclick="hapusReport(${i})">Hapus</button></td>
+                </tr>`;
+            tableBody.innerHTML += row;
+        });
     }
-    const judul = document.getElementById('judul').value;
-    const isi = document.getElementById('Isi').value;
-    reports.push({ judul, isi, photo: selectedPhoto || null, author: currentUser, createdAt: new Date().toISOString() });
-    localStorage.setItem('reports', JSON.stringify(reports));
-    form.reset();
-    selectedPhoto = null;
-    photoPreview.style.display = 'none';
-    clearPhotoBtn.style.display = 'none';
-    renderReports();
-}
 
-function hapusReport(index) {
-    reports.splice(index, 1);
-    localStorage.setItem('reports', JSON.stringify(reports));
-    renderReports();
-}
+    // Save report function
+    function simpanReport(e) {
+        e.preventDefault();
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            loginModal.show();
+            return;
+        }
+        const judul = document.getElementById('judul').value;
+        const isi = document.getElementById('Isi').value;
+        reports.push({ judul, isi, photo: selectedPhoto || null, author: currentUser, createdAt: new Date().toISOString() });
+        localStorage.setItem('reports', JSON.stringify(reports));
+        form.reset();
+        selectedPhoto = null;
+        photoPreview.style.display = 'none';
+        clearPhotoBtn.style.display = 'none';
+        renderReports();
+    }
 
-function toggleDarkMode() {
-    isDarkMode = !isDarkMode;
-    document.body.classList.toggle('dark-mode', isDarkMode);
-    localStorage.setItem('darkMode', isDarkMode);
-    toggleMode.textContent = isDarkMode ? 'Mode Terang' : 'Mode Gelap';
-}
+    // Delete report function
+    function hapusReport(index) {
+        reports.splice(index, 1);
+        localStorage.setItem('reports', JSON.stringify(reports));
+        renderReports();
+    }
 
-if (isDarkMode) {
-    document.body.classList.add('dark-mode');
-    toggleMode.textContent = 'Mode Terang';
-} else {
-    toggleMode.textContent = 'Mode Gelap';
-}
+    window.hapusReport = hapusReport;
 
-form.addEventListener('submit', simpanReport);
-toggleMode.addEventListener('click', toggleDarkMode);
+    // Toggle dark mode function
+    function toggleDarkMode() {
+        isDarkMode = !isDarkMode;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        localStorage.setItem('darkMode', isDarkMode);
+        const toggleMode = document.getElementById('toggleMode');
+        if (toggleMode) {
+            toggleMode.innerHTML = isDarkMode ? '<i class="bi bi-sun"></i> Mode Terang' : '<i class="bi bi-moon"></i> Mode Gelap';
+        }
+    }
 
-
-function updateAuthUI() {
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) {
-        currentUserSpan.textContent = `Halo, ${currentUser}`;
-        currentUserSpan.style.display = 'inline-block';
-        logoutBtn.style.display = 'inline-block';
-        loginBtn.style.display = 'none';
-      
-        document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = false);
+    // Initialize dark mode
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        if (toggleMode) toggleMode.innerHTML = '<i class="bi bi-sun"></i> Mode Terang';
     } else {
-        currentUserSpan.style.display = 'none';
-        logoutBtn.style.display = 'none';
-        loginBtn.style.display = 'inline-block';
-        
-        document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = true);
-        
+        if (toggleMode) toggleMode.innerHTML = '<i class="bi bi-moon"></i> Mode Gelap';
     }
-}
 
-loginBtn.addEventListener('click', () => {
-    loginError.style.display = 'none';
-    loginForm.reset();
-    loginModal.show();
-});
+    // Event listeners
+    form.addEventListener('submit', simpanReport);
+    toggleMode.addEventListener('click', toggleDarkMode);
 
-logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('currentUser');
-    updateAuthUI();
-});
+    // Update authentication UI
+    function updateAuthUI() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            currentUserSpan.textContent = `Halo, ${currentUser}`;
+            currentUserSpan.style.display = 'inline-block';
+            logoutBtn.style.display = 'inline-block';
+            loginBtn.style.display = 'none';
 
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const u = loginUsername.value.trim();
-    const p = loginPassword.value;
-    const found = users.find(x => x.username === u && x.password === p);
-    if (found) {
+            document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = false);
+        } else {
+            currentUserSpan.style.display = 'none';
+            logoutBtn.style.display = 'none';
+            loginBtn.style.display = 'inline-block';
+
+            document.querySelectorAll('#reportForm input, #reportForm textarea, #reportForm button').forEach(el => el.disabled = true);
+
+        }
+    }
+
+    // Authentication event listeners
+    loginBtn.addEventListener('click', () => {
+        loginError.style.display = 'none';
+        loginForm.reset();
+        loginModal.show();
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('currentUser');
+        updateAuthUI();
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const u = loginUsername.value.trim();
+        const p = loginPassword.value;
+        const found = users.find(x => x.username === u && x.password === p);
+        if (found) {
+            localStorage.setItem('currentUser', u);
+            loginModal.hide();
+            updateAuthUI();
+        } else {
+            loginError.textContent = 'Username atau password salah.';
+            loginError.style.display = 'block';
+        }
+    });
+
+    registerBtn.addEventListener('click', () => {
+        const u = loginUsername.value.trim();
+        const p = loginPassword.value;
+        if (!u || !p) {
+            loginError.textContent = 'Masukkan username dan password untuk daftar.';
+            loginError.style.display = 'block';
+            return;
+        }
+        if (users.find(x => x.username === u)) {
+            loginError.textContent = 'Username sudah terdaftar.';
+            loginError.style.display = 'block';
+            return;
+        }
+        users.push({ username: u, password: p });
+        localStorage.setItem('users', JSON.stringify(users));
+
         localStorage.setItem('currentUser', u);
         loginModal.hide();
         updateAuthUI();
-    } else {
-        loginError.textContent = 'Username atau password salah.';
-        loginError.style.display = 'block';
-    }
-});
+    });
 
-registerBtn.addEventListener('click', () => {
-    const u = loginUsername.value.trim();
-    const p = loginPassword.value;
-    if (!u || !p) {
-        loginError.textContent = 'Masukkan username dan password untuk daftar.';
-        loginError.style.display = 'block';
-        return;
-    }
-    if (users.find(x => x.username === u)) {
-        loginError.textContent = 'Username sudah terdaftar.';
-        loginError.style.display = 'block';
-        return;
-    }
-    users.push({ username: u, password: p });
-    localStorage.setItem('users', JSON.stringify(users));
-   
-    localStorage.setItem('currentUser', u);
-    loginModal.hide();
     updateAuthUI();
-});
 
-
-updateAuthUI();
-
-
-async function startStream(facingMode = 'environment') {
-    stopStream();
-    cameraError.style.display = 'none';
-    try {
-        const constraints = { video: { facingMode } };
-        currentStream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = currentStream;
-        await video.play();
-    } catch (err) {
-        console.error('Gagal mengakses kamera', err);
-        cameraError.textContent = 'Kamera tidak ditemukan atau akses ditolak.';
-        cameraError.style.display = 'block';
+    // Camera functions
+    async function startStream(facingMode = 'environment') {
+        stopStream();
+        cameraError.style.display = 'none';
+        try {
+            const constraints = { video: { facingMode } };
+            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+            video.srcObject = currentStream;
+            await video.play();
+        } catch (err) {
+            console.error('Gagal mengakses kamera', err);
+            cameraError.textContent = 'Kamera tidak ditemukan atau akses ditolak.';
+            cameraError.style.display = 'block';
+        }
     }
-}
 
-function stopStream() {
-    if (currentStream) {
-        currentStream.getTracks().forEach(t => t.stop());
-        currentStream = null;
+    function stopStream() {
+        if (currentStream) {
+            currentStream.getTracks().forEach(t => t.stop());
+            currentStream = null;
+        }
+        if (video) video.srcObject = null;
     }
-    if (video) video.srcObject = null;
-}
 
-captureBtn.addEventListener('click', () => {
-    if (!video || video.readyState < 2) {
-        cameraError.textContent = 'Kamera belum siap.';
-        cameraError.style.display = 'block';
-        return;
-    }
-    const w = video.videoWidth;
-    const h = video.videoHeight;
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, w, h);
-    const dataUrl = canvas.toDataURL('image/png');
-    selectedPhoto = dataUrl;
-    photoPreview.src = dataUrl;
-    photoPreview.style.display = 'inline-block';
-    clearPhotoBtn.style.display = 'inline-block';
-    cameraModal.hide();
-    stopStream();
-});
+    captureBtn.addEventListener('click', () => {
+        if (!video || video.readyState < 2) {
+            cameraError.textContent = 'Kamera belum siap.';
+            cameraError.style.display = 'block';
+            return;
+        }
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/png');
+        selectedPhoto = dataUrl;
+        photoPreview.src = dataUrl;
+        photoPreview.style.display = 'inline-block';
+        clearPhotoBtn.style.display = 'inline-block';
+        cameraModal.hide();
+        stopStream();
+    });
 
-openCameraBtn.addEventListener('click', async () => {
-    
-    cameraError.style.display = 'none';
-    cameraModal.show();
-    
-    setTimeout(() => startStream(currentFacing), 200);
-});
+    openCameraBtn.addEventListener('click', async () => {
 
-switchCameraBtn.addEventListener('click', () => {
-    currentFacing = currentFacing === 'environment' ? 'user' : 'environment';
-    startStream(currentFacing);
-});
+        cameraError.style.display = 'none';
+        cameraModal.show();
 
-clearPhotoBtn.addEventListener('click', () => {
-    selectedPhoto = null;
-    photoPreview.src = '';
-    photoPreview.style.display = 'none';
-    clearPhotoBtn.style.display = 'none';
-});
+        setTimeout(() => startStream(currentFacing), 200);
+    });
 
+    switchCameraBtn.addEventListener('click', () => {
+        currentFacing = currentFacing === 'environment' ? 'user' : 'environment';
+        startStream(currentFacing);
+    });
 
-cameraModalEl.addEventListener('hidden.bs.modal', () => {
-    stopStream();
-});
+    clearPhotoBtn.addEventListener('click', () => {
+        selectedPhoto = null;
+        photoPreview.src = '';
+        photoPreview.style.display = 'none';
+        clearPhotoBtn.style.display = 'none';
+    });
 
+    cameraModalEl.addEventListener('hidden.bs.modal', () => {
+        stopStream();
+    });
 
-function escapeHtml(unsafe) {
+    // Utility functions
+    function escapeHtml(unsafe) {
     if (!unsafe && unsafe !== 0) return '';
     return String(unsafe)
         .replace(/&/g, '&amp;')
@@ -271,3 +283,6 @@ function downloadPhoto(index) {
     a.click();
     a.remove();
 }
+
+
+});

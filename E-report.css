@@ -1,4 +1,16 @@
-@import "tailwindcss";
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+}
+
 .fade-in {
     animation: fadeIn 1s ease-in;
 }
@@ -26,65 +38,109 @@
     to { transform: translateY(0); opacity: 1; }
 }
 
-
-.dark-mode .navbar {
-    background-color: #222 !important;
-    border-bottom-color: #444 !important;
+.navbar {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-bottom: none !important;
+    transition: background 0.3s ease;
 }
 
-.dark-mode .navbar-brand {
-    color: #fff;
+body.dark-mode .navbar {
+    background: rgba(44, 62, 80, 0.9) !important;
 }
 
-.dark-mode #currentUser {
-    color: #aaa !important;
+.navbar-brand {
+    font-weight: bold;
+    color: #667eea !important;
+    transition: color 0.3s ease;
 }
 
-.dark-mode .card {
-    background-color: #333;
-    color: #ffffff;
+body.dark-mode .navbar-brand {
+    color: #ecf0f1 !important;
 }
 
-.dark-mode .form-control {
-    background-color: #555;
-    color: #ffffff;
-    border-color: #777;
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
 }
 
-.dark-mode .form-control:focus {
-    background-color: #555;
-    color: #ffffff;
-    border-color: #0078d7;
-    box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+body.dark-mode .card {
+    background: rgba(44, 62, 80, 0.9);
+    color: #ecf0f1;
 }
 
-.dark-mode .table {
-    background-color: #333;
-    color: #ffffff;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
 
-.dark-mode .table th {
-    background-color: #0078d7;
-    color: #ffffff;
+.btn {
+    border-radius: 25px;
+    transition: all 0.3s ease;
 }
 
-.dark-mode .table td {
-    border-color: #555;
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.dark-mode .table tbody tr:hover {
-    background-color: #444;
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
 }
 
-.dark-mode .btn-outline-secondary {
-    color: #ffffff;
-    border-color: #6c757d;
+body.dark-mode .table {
+    background: rgba(44, 62, 80, 0.9);
+    color: #ecf0f1;
 }
 
-.dark-mode .btn-outline-secondary:hover {
-    background-color: #6c757d;
-    color: #ffffff;
+.table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
 }
+
+.table td {
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .table tbody tr:hover {
+    background-color: rgba(236, 240, 241, 0.1);
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+body.dark-mode .form-control {
+    background: rgba(44, 62, 80, 0.9);
+    border-color: rgba(236, 240, 241, 0.3);
+    color: #ecf0f1;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+
+
 
 
 #videoPreview {
@@ -101,7 +157,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Modal tuning */
+
 .modal-body { padding: 1rem; }
 .modal-footer { display:flex; align-items:center; }
 
@@ -109,3 +165,5 @@
 @media (max-width: 576px) {
     #videoPreview { height: 220px; }
 }
+
+
